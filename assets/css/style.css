@@ -1134,6 +1134,11 @@ h3 {
 .field.is-invalid textarea { border-color: var(--coral); }
 
 .form button { width: 100%; margin-top: 0.35rem; }
+.form__botcheck {
+  display: none !important;
+  position: absolute;
+  left: -9999px;
+}
 .form__note {
   min-height: 1.2rem;
   margin-top: 0.75rem;
