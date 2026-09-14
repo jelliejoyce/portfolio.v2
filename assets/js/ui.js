@@ -548,6 +548,7 @@
                  message.value.trim();
 
       var endpoint = form.getAttribute('data-endpoint');
+      var accessKey = form.getAttribute('data-access-key');
 
       if (endpoint) {
         var original = submit.innerHTML;
@@ -557,15 +558,28 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({
+            access_key: accessKey,
+            subject: subject,
+            from_name: name.value.trim(),
+            /* replyto is what makes the Reply button in your mailbox go to the
+               visitor rather than to Web3Forms. */
+            replyto: email.value.trim(),
             name: name.value.trim(),
             email: email.value.trim(),
             projectType: type ? type.value : '',
             message: message.value.trim(),
-            subject: subject
+            botcheck: false
           })
         })
           .then(function (res) {
-            if (!res.ok) throw new Error(res.status);
+            /* Web3Forms answers HTTP 200 even when it refuses a message, so the
+               success flag in the body is the thing to trust, not the status. */
+            return res.json().then(function (data) {
+              if (!res.ok || data.success === false) throw new Error(data.message || res.status);
+              return data;
+            });
+          })
+          .then(function () {
             form.innerHTML = '<div class="form__done"><p class="form__done-title">Message received.</p>' +
               '<p>I\'ll be back to you within one business day — usually much sooner.</p></div>';
           })
