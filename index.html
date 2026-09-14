@@ -359,8 +359,16 @@
         </ul>
       </div>
 
-      <!-- Static-site friendly: posts to data-endpoint if you set one, else opens the visitor's mail client. -->
-      <form class="form glass glass--dark reveal" id="contactForm" novalidate data-endpoint="">
+        <!-- Posts to Web3Forms, which forwards the message to the mailbox registered
+           against the access key. With no endpoint it falls back to opening the
+           visitor's mail client. -->
+      <form class="form glass glass--dark reveal" id="contactForm" novalidate
+            data-endpoint="https://api.web3forms.com/submit"
+            data-access-key="5610e500-aa2b-4bd5-b35c-22909c198635">
+        <!-- Honeypot: invisible to people, irresistible to bots. Web3Forms drops
+             any submission where this arrives ticked. -->
+        <input type="checkbox" name="botcheck" class="form__botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" />
+           
         <div class="form__row">
           <p class="field">
             <label for="f-name">Name</label>
